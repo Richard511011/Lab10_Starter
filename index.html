@@ -14,6 +14,7 @@
   <!-- Main Stylesheet & Scripts -->
   <link rel="stylesheet" href="assets/styles/global.css" />
   <script src="assets/scripts/partyHorn.js" type="module"></script>
+  <script src="https://unpkg.com/launchdarkly-js-client-sdk@2" ></script>
 </head>
 
 <body>
@@ -42,6 +43,44 @@
       <audio class="hidden" src=""></audio>
     </section>
   </main>
+  <script>
+    var user = {
+      
+      key: 'UNIQUE IDENTIFIER',
+     
+    };
+
+  // A/B testing
+
+  //code inspired by https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript post
+   let keyValue = '';
+  let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789';
+  let charactersLength = characters.length;
+  for (var i = 0; i < charactersLength; i++) {
+    keyValue += characters.charAt(Math.floor(Math.random() *
+      charactersLength));
+  }
+  user.key = keyValue;
+  console.log(user);
+    var ldclient = LDClient.initialize('61a276e27386bf104964c90f', user);
+
+    function render() {
+      let shouldShow = ldclient.variation('blue-background');
+      //50% chance if shouldShow is true. if it is, add class of blue
+      console.log(shouldShow);       
+      if (shouldShow) {
+        document.querySelector('body').classList.add("blue");
+
+
+      }
+    }
+  
+    
+    ldclient.on('ready', render);
+    ldclient.on('change', render);
+  </script>
+
+
 </body>
 
 </html>
